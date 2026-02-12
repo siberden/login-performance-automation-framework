@@ -15,9 +15,3 @@ Feature: Login Performance Feature
     Given login API performance is measured
     When user logs in via UI
     Then products page should be displayed within 2000 ms
-
-
-
-
-
-
