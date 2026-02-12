@@ -10,15 +10,21 @@ public class Hooks {
 
     private long scenarioStart;
 
-    @Before
-    public void setUp(Scenario scenario) {
+    @Before("@ui")
+    public void setUpUI(Scenario scenario) {
         scenarioStart = System.currentTimeMillis();
         DriverFactory.getDriver();
-        System.out.println("Starting scenario: " + scenario.getName());
+        System.out.println("Starting UI scenario: " + scenario.getName());
     }
 
-    @After
-    public void tearDown(Scenario scenario) {
+    @Before("@api")
+    public void setUpAPI(Scenario scenario) {
+        scenarioStart = System.currentTimeMillis();
+        System.out.println("Starting API scenario: " + scenario.getName());
+    }
+
+    @After("@ui")
+    public void tearDownUI(Scenario scenario) {
 
         long scenarioDuration = System.currentTimeMillis() - scenarioStart;
         System.out.println("Scenario total duration: " + scenarioDuration + " ms");
@@ -39,5 +45,14 @@ public class Hooks {
 
         PerformanceContext.clear();
         DriverFactory.quitDriver();
+    }
+
+    @After("@api")
+    public void tearDownAPI(Scenario scenario) {
+
+        long scenarioDuration = System.currentTimeMillis() - scenarioStart;
+        System.out.println("Scenario total duration: " + scenarioDuration + " ms");
+
+        PerformanceContext.clear();
     }
 }

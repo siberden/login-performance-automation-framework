@@ -1,28 +1,15 @@
-package api;
+public static long login() {
 
-import io.restassured.RestAssured;
-import io.restassured.response.Response;
-
-import static io.restassured.RestAssured.given;
-
-
-public class LoginApiClient {
-
-    static {
-        RestAssured.baseURI = "https://reqres.in";
+    String body = """
+    {
+      "email": "eve.holt@reqres.in",
+      "password": "cityslicka"
     }
+    """;
 
-    public static long login() {
+    long start = System.currentTimeMillis();
 
-        String body = """
-        {
-          "email": "eve.holt@reqres.in",
-          "password": "cityslicka"
-        }
-        """;
-
-        long start = System.currentTimeMillis();
-
+    try {
         Response response =
                 given()
                         .contentType("application/json")
@@ -32,10 +19,13 @@ public class LoginApiClient {
 
         long duration = System.currentTimeMillis() - start;
 
-        if (response == null || response.getStatusCode() != 200) {
-            System.out.println("⚠️ API login failed");
+        if (response.getStatusCode() != 200) {
+            throw new RuntimeException("API returned non-200 status: " + response.getStatusCode());
         }
 
         return duration;
+
+    } catch (Exception e) {
+        throw new RuntimeException("API call failed in CI environment", e);
     }
 }
