@@ -13,9 +13,11 @@ public class ApiSteps {
 
         PerformanceContext.startApiTimer();
 
-        long duration = LoginApiClient.login();
+        LoginApiClient.login();
 
         PerformanceContext.endApiTimer();
+
+        Long duration = PerformanceContext.getApiDuration();
 
         System.out.println("API duration recorded: " + duration + " ms");
     }
@@ -23,12 +25,12 @@ public class ApiSteps {
     @Given("login API responds within {int} ms")
     public void login_api_responds_within_ms(int maxMs) {
 
-        long duration = LoginApiClient.login();
+        Long duration = PerformanceContext.getApiDuration();
 
-        System.out.println("API duration recorded: " + duration + " ms");
+        System.out.println("Validating API duration: " + duration + " ms");
 
         assertTrue(
-                "API too slow: " + duration + " ms",
+                "API too slow: " + duration + " ms (limit: " + maxMs + " ms)",
                 duration < maxMs
         );
     }

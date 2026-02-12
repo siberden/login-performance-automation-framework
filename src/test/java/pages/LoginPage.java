@@ -29,12 +29,20 @@ public class LoginPage {
 
     // Standard login (functional)
     public void login(String user, String pass) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(username))
-                .sendKeys(user);
 
-        driver.findElement(password).sendKeys(pass);
-        driver.findElement(loginBtn).click();
+        var userField = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(username)
+        );
+        userField.sendKeys(user);
+
+        var passField = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(password)
+        );
+        passField.sendKeys(pass);
+
+        wait.until(ExpectedConditions.elementToBeClickable(loginBtn)).click();
     }
+
 
     // Login + UI performance measurement
     public long loginWithPerformance() {
@@ -52,8 +60,10 @@ public class LoginPage {
         return System.currentTimeMillis() - startTime;
     }
 
-    // Products page assertion
     public boolean isOnProductsPage() {
-        return driver.getCurrentUrl().contains("inventory");
+        return wait.until(
+                ExpectedConditions.urlContains("inventory")
+        );
     }
+
 }
